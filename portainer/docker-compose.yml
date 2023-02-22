@@ -1,0 +1,14 @@
+version: "2.1"
+services:
+  portainer:
+    image: portainer/portainer:latest
+    container_name: portainer
+    ports:
+      - 5001:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./assets/public:/public
+      - portainer_data:/data
+    restart: always
+volumes:
+  portainer_data:

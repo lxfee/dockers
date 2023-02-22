@@ -1,0 +1,30 @@
+version: "3.9"
+services:
+  AutoBangumi:
+    image: estrellaxd/auto_bangumi:latest
+    container_name: AutoBangumi
+    volumes:
+      - ./config:/config
+    environment:
+      - PUID=1001
+      - PGID=1000
+      - TZ=Asia/Shanghai
+      - AB_DOWNLOADER_HOST=[qbitorrent地址]
+      - AB_DOWNLOADER_USERNAME=[qbitorrent账号]
+      - AB_DOWNLOADER_PASSWORD=[qbitorrent密码]
+      - AB_INTERVAL_TIME=7200
+      - AB_RENAME_FREQ=20
+      - AB_METHOD=Advance
+      - AB_GROUP_TAG=True
+      - AB_NOT_CONTAIN=720|繁体|CHT|JPTC|繁日|\d+-\d+|BIG5
+      - AB_DOWNLOAD_PATH=/media/storage/media/bangumi
+      - AB_RSS=[mikan订阅链接]
+      - AB_DEBUG_MODE=True
+      - AB_EP_COMPLETE=True
+      - AB_WEBUI_PORT=5002
+      - AB_RENAME=True
+      - AB_ENABLE_TMDB=True
+      - AB_LANGUAGE=zh
+      - AB_HTTP_PROXY=[代理地址]
+    network_mode: "host"
+    restart: unless-stopped

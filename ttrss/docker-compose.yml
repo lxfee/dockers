@@ -1,0 +1,70 @@
+# 自带rsshub的ttrss
+# 通过 http://rsshub:1200 使用rsshub服务
+
+version: "3"
+services:
+  rss:
+    image: wangqiru/ttrss:latest
+    container_name: ttrss
+    ports:
+      - 8086:80
+    environment:
+      - SELF_URL_PATH= # please change to your own domain
+      - DB_PASS= # use the same password defined in `database.postgres`
+      - PUID=1000
+      - PGID=1000
+      - ALLOW_PORTS=1200 # ttrss默认不允许订阅80、443以外端口的rss链接，这里特别放行1200（rsshub）
+    volumes:
+      - feed-icons:/var/www/feed-icons/
+    stdin_open: true
+    tty: true
+    restart: always
+
+  database.postgres:
+    image: postgres:13-alpine
+    container_name: postgres
+    environment:
+      - POSTGRES_PASSWORD= # feel free to change the password
+    volumes:
+      - ~/docker-services/ttrss/postgres/data/:/var/lib/postgresql/data # persist postgres data to ~/postgres/data/ on the host
+    restart: always
+
+  utility.watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=86400
+    restart: always
+
+  rsshub:
+    image: diygod/rsshub
+    restart: always
+    environment:
+      NODE_ENV: production
+      CACHE_TYPE: redis
+      REDIS_URL: 'redis://redis:6379/'
+      PUPPETEER_WS_ENDPOINT: 'ws://browserless:3000'  # marked
+    depends_on:
+      - redis
+      - browserless  # marked
+
+  browserless:  # marked
+    image: browserless/chrome  # marked
+    restart: always  # marked
+    ulimits:  # marked
+      core:  # marked
+        hard: 0  # marked
+        soft: 0  # marked
+
+  redis:
+    image: redis:alpine
+    restart: always
+    volumes:
+      - redis-data:/data
+
+volumes:
+  feed-icons:
+  redis-data:
