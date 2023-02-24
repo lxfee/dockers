@@ -1,17 +1,18 @@
 version: "2.1"
 services:
   calibre-web:
-    image: lscr.io/linuxserver/calibre-web:latest
+    image: johngong/calibre-web:latest
     container_name: calibre-web
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Asia/Shanghai
-      - DOCKER_MODS=linuxserver/mods:universal-calibre #optional
-      - OAUTHLIB_RELAX_TOKEN_SCOPE=1 #optional
+      - CALIBRE_ASCII_FILENAME=false
+      - ENABLE_CALIBRE_SERVER_OPDS=true
+      - ENABLE_DOUBAN_SEARCH=true
     volumes:
       - ./data:/config
-      - ./book:/books
+      - ./book/.library:/library
+      - ./book/添加书籍:/autoaddbooks
     ports:
-      - 5004:8083
-    restart: unless-stopped
+      - 8083:8083
+      - 8080:8080
