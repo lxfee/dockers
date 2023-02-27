@@ -1,0 +1,9 @@
+version: "3.6"
+services:
+  frpc:
+    image: stilleshan/frpc
+    container_name: frpc
+    volumes:
+      - ./frpc.ini:/frp/frpc.ini
+    network_mode: "host"
+    restart: always
