@@ -1,7 +1,7 @@
 version: "2.1"
 services:
   jellyfin:
-    image: linuxserver/jellyfin:latest
+    image: nyanmisaka/jellyfin:latest
     container_name: jellyfin
     environment:
       - PUID=1000
@@ -9,7 +9,7 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./config:/config
-      - ./media:/data
+      - ./media:/media
     devices:
       - /dev/dri:/dev/dri #optional
     restart: unless-stopped
